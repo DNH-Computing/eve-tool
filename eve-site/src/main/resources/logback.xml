@@ -15,6 +15,6 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 
-	<logger name="nz.net.dnh.eve" level="ALL" />
+	<logger name="nz.net.dnh.eve" level="DEBUG" />
 	<logger name="nz.net.dnh.eve.web.view.ContextBeanExposingView" level="WARN" />
 </configuration>
