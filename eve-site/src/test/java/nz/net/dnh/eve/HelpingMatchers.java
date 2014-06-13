@@ -41,7 +41,7 @@ public class HelpingMatchers {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T extends java.lang.Comparable<? super T>> org.hamcrest.Matcher<T> greaterThan(final T value) {
-		return Matchers.greaterThan((Comparable) value);
+		return (Matcher<T>) Matchers.greaterThan((Comparable) value);
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class HelpingMatchers {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T extends java.lang.Comparable<? super T>> org.hamcrest.Matcher<T> lessThan(final T value) {
-		return Matchers.lessThan((Comparable) value);
+		return (Matcher<T>) Matchers.lessThan((Comparable) value);
 	}
 
 	/**
