@@ -28,19 +28,12 @@ public class InventoryGroup implements Serializable {
 	@Max(3000)
 	private String description;
 	private Integer iconID;
-	private Integer useBasePrice;
-	private Integer allowManufacture;
-	private Integer allowRecycler;
-	private Integer anchored;
-	private Integer anchorable;
-	private Integer fittableNonSingleton;
-	private Integer published;
 
 	public int getGroupID() {
 		return this.groupID;
 	}
 
-	public void setGroupID(int groupID) {
+	public void setGroupID(final int groupID) {
 		this.groupID = groupID;
 	}
 
@@ -52,7 +45,7 @@ public class InventoryGroup implements Serializable {
 		return this.groupName;
 	}
 
-	public void setGroupName(String groupName) {
+	public void setGroupName(final String groupName) {
 		this.groupName = groupName;
 	}
 
@@ -60,7 +53,7 @@ public class InventoryGroup implements Serializable {
 		return this.description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 
@@ -68,64 +61,8 @@ public class InventoryGroup implements Serializable {
 		return this.iconID;
 	}
 
-	public void setIconID(Integer iconID) {
+	public void setIconID(final Integer iconID) {
 		this.iconID = iconID;
-	}
-
-	public Integer getUseBasePrice() {
-		return this.useBasePrice;
-	}
-
-	public void setUseBasePrice(Integer useBasePrice) {
-		this.useBasePrice = useBasePrice;
-	}
-
-	public Integer getAllowManufacture() {
-		return this.allowManufacture;
-	}
-
-	public void setAllowManufacture(Integer allowManufacture) {
-		this.allowManufacture = allowManufacture;
-	}
-
-	public Integer getAllowRecycler() {
-		return this.allowRecycler;
-	}
-
-	public void setAllowRecycler(Integer allowRecycler) {
-		this.allowRecycler = allowRecycler;
-	}
-
-	public Integer getAnchored() {
-		return this.anchored;
-	}
-
-	public void setAnchored(Integer anchored) {
-		this.anchored = anchored;
-	}
-
-	public Integer getAnchorable() {
-		return this.anchorable;
-	}
-
-	public void setAnchorable(Integer anchorable) {
-		this.anchorable = anchorable;
-	}
-
-	public Integer getFittableNonSingleton() {
-		return this.fittableNonSingleton;
-	}
-
-	public void setFittableNonSingleton(Integer fittableNonSingleton) {
-		this.fittableNonSingleton = fittableNonSingleton;
-	}
-
-	public Integer getPublished() {
-		return this.published;
-	}
-
-	public void setPublished(Integer published) {
-		this.published = published;
 	}
 
 	public boolean isMineral() {
@@ -134,15 +71,8 @@ public class InventoryGroup implements Serializable {
 
 	@Override
 	public String toString() {
-		return "InventoryGroup [groupID=" + this.groupID + ", category="
-				+ this.category + ", groupName=" + this.groupName
-				+ ", description=" + this.description + ", iconID="
-				+ this.iconID + ", useBasePrice=" + this.useBasePrice
-				+ ", allowManufacture=" + this.allowManufacture
-				+ ", allowRecycler=" + this.allowRecycler + ", anchored="
-				+ this.anchored + ", anchorable=" + this.anchorable
-				+ ", fittableNonSingleton=" + this.fittableNonSingleton
-				+ ", published=" + this.published + "]";
+		return "InventoryGroup [groupID=" + this.groupID + ", category=" + this.category + ", groupName=" + this.groupName
+				+ ", description=" + this.description + ", iconID=" + this.iconID + "]";
 	}
 
 	@Override
@@ -151,7 +81,7 @@ public class InventoryGroup implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		return obj instanceof InventoryGroup
 				&& this.groupID == ((InventoryGroup) obj).getGroupID();
 	}

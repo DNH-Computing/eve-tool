@@ -1,71 +1,42 @@
 package nz.net.dnh.eve.business.impl.dto.blueprint;
 
-import java.math.BigDecimal;
-import java.util.Date;
 
+import java.math.BigDecimal;
+import java.util.Map.Entry;
+
+import nz.net.dnh.eve.business.AbstractType;
 import nz.net.dnh.eve.business.BlueprintSummary;
+import nz.net.dnh.eve.business.RequiredBlueprint;
+import nz.net.dnh.eve.business.RequiredTypes;
+import nz.net.dnh.eve.business.impl.BlueprintRequiredTypesService;
 import nz.net.dnh.eve.model.domain.Blueprint;
 
-public class BlueprintSummaryImpl implements BlueprintSummary {
+public class BlueprintSummaryImpl extends AbstractBlueprintImpl implements BlueprintSummary {
 
-	private final Blueprint blueprint;
+	private RequiredTypes requiredTypes;
+	private final BlueprintRequiredTypesService requiredTypesService;
 
-	public BlueprintSummaryImpl(final Blueprint blueprint) {
-		this.blueprint = blueprint;
-	}
-
-	public Blueprint toBlueprint() {
-		return this.blueprint;
-	}
-
-	@Override
-	public String getName() {
-		return this.blueprint.getTypeName();
+	public BlueprintSummaryImpl(final Blueprint blueprint, final BlueprintRequiredTypesService requiredTypesGenerator) {
+		super(blueprint);
+		this.requiredTypesService = requiredTypesGenerator;
 	}
 
 	@Override
-	public BigDecimal getTotalCost() {
-		return this.blueprint.getCostSummary().getTotalCost();
-	}
-
-	@Override
-	public BigDecimal getMaterialCost() {
-		return this.blueprint.getCostSummary().getMaterialCost();
+	public RequiredTypes getRequiredTypes() {
+		// Lazily evaluated for the times when the list of required types is not needed
+		if (this.requiredTypes == null) {
+			this.requiredTypes = this.requiredTypesService.getRequiredTypes(this);
+		}
+		return this.requiredTypes;
 	}
 
 	@Override
 	public BigDecimal getRunningCost() {
-		return this.blueprint.getCostSummary().getOtherCost();
-	}
-
-	@Override
-	public BigDecimal getSaleValue() {
-		return this.blueprint.getCostSummary().getSaleValue();
-	}
-
-	@Override
-	public Date getSaleValueLastUpdated() {
-		return this.blueprint.getLastUpdated();
-	}
-
-	@Override
-	public BigDecimal getProfit() {
-		return this.blueprint.getCostSummary().getProfit();
-	}
-
-	@Override
-	public BigDecimal getProfitPercentage() {
-		return this.blueprint.getCostSummary().getProfitPercentage();
-	}
-
-	@Override
-	public int getId() {
-		return this.blueprint.getBlueprintTypeID();
-	}
-
-	@Override
-	public int getHours() {
-		return this.blueprint.getCostSummary().getHours();
+		BigDecimal runningCost = BigDecimal.ZERO;
+		for (final RequiredBlueprint requiredBlueprint : getRequiredTypes().getRequiredBlueprints()) {
+			runningCost = runningCost.add(requiredBlueprint.getProductionCost());
+		}
+		return runningCost;
 	}
 
 	@Override
@@ -74,25 +45,8 @@ public class BlueprintSummaryImpl implements BlueprintSummary {
 	}
 
 	@Override
-	public int getProductionEfficiency() {
-		return this.blueprint.getProductionEfficiency();
-	}
-
-	@Override
-	public int getMaterialEfficiency() {
-		return this.blueprint.getMaterialEfficiency();
-	}
-
-	@Override
-	public String toString() {
-		return "Blueprint Summary (" + this.blueprint + ")";
-	}
-
-	@Override
 	public boolean equals(final Object obj) {
-		return obj instanceof BlueprintSummaryImpl
-				&& this.blueprint
-				.equals(((BlueprintSummaryImpl) obj).blueprint);
+		return obj instanceof BlueprintSummaryImpl && this.blueprint.equals(((BlueprintSummaryImpl) obj).blueprint);
 	}
 
 	@Override
@@ -101,17 +55,44 @@ public class BlueprintSummaryImpl implements BlueprintSummary {
 	}
 
 	@Override
-	public int getProducedTypeID() {
-		return this.blueprint.getBlueprintType().getProductTypeID();
+	public BigDecimal getTotalCost() {
+		final BigDecimal materialCost = getMaterialCost();
+		if (materialCost == null) {
+			return null;
+		}
+		return getRunningCost().add(materialCost);
 	}
 
 	@Override
-	public int getProducedQuantity() {
-		return this.blueprint.getProducedQuantity();
+	public BigDecimal getProfit() {
+		final BigDecimal totalCost = getTotalCost();
+		if (totalCost == null) {
+			return null;
+		}
+		return getSaleValue().subtract(totalCost);
 	}
 
 	@Override
-	public boolean isAutomaticallyUpdateSalePrice() {
-		return this.blueprint.isAutomaticallyUpdateSalePrice();
+	public BigDecimal getProfitPercentage() {
+		final BigDecimal profit = getProfit();
+		final BigDecimal saleValue = getSaleValue();
+		// Return null if we don't know our profit, or if our sale value is zero
+		if (profit == null || saleValue.signum() == 0) {
+			return null;
+		}
+		return profit.divide(saleValue, BigDecimal.ROUND_HALF_UP);
+	}
+
+	@Override
+	public BigDecimal getMaterialCost() {
+		BigDecimal materialCost = BigDecimal.ZERO;
+		for (final Entry<? extends AbstractType, Integer> requiredType : getRequiredTypes().getResolvedRequiredTypes().entrySet()) {
+			final BigDecimal requiredTypeCost = requiredType.getKey().getCost();
+			if (requiredTypeCost == null)
+				return null;
+			final BigDecimal requiredUnits = BigDecimal.valueOf(requiredType.getValue());
+			materialCost = materialCost.add(requiredTypeCost.multiply(requiredUnits));
+		}
+		return materialCost;
 	}
 }

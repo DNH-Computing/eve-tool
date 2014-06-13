@@ -45,6 +45,30 @@ footer {
 	padding-bottom: 20px;
 }
 
-h1 .btn {
+h1 .btn, h2 .btn {
 	font-weight: normal;
+}
+
+/* The item tree widget */
+ul.itemtree {
+	margin-left: 0;
+}
+
+ul.itemtree ul {
+	margin-left: 32px;
+}
+
+ul.itemtree, ul.itemtree ul {
+	list-style: none;
+}
+
+ul.itemtree li {
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #ddd;
+	padding-top: 8px;
+}
+
+ul.itemtree .decomposition-state {
+	font-style: italic;
 }

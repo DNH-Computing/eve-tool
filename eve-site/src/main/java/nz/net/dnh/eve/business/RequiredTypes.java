@@ -1,56 +1,57 @@
 package nz.net.dnh.eve.business;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.SortedMap;
-import java.util.TreeMap;
 
 /**
  * The types required for a blueprint
  */
 public class RequiredTypes {
-	private final SortedMap<Component, Integer> requiredComponents;
-	private final SortedMap<Mineral, Integer> requiredMinerals;
+	private final List<RequiredType<? extends AbstractType>> requiredTypesTree;
+	private final SortedMap<? extends AbstractType, Integer> resolvedRequiredTypes;
+	private final List<RequiredBlueprint> requiredBlueprints;
 
-	public RequiredTypes(final SortedMap<Component, Integer> requiredComponents, final SortedMap<Mineral, Integer> requiredMinerals) {
-		this.requiredComponents = Collections.unmodifiableSortedMap(requiredComponents);
-		this.requiredMinerals = Collections.unmodifiableSortedMap(requiredMinerals);
+	public RequiredTypes(final List<RequiredType<? extends AbstractType>> requiredTypesTree,
+			final SortedMap<? extends AbstractType, Integer> resolvedRequiredTypes, final List<RequiredBlueprint> requiredBlueprints) {
+		this.requiredTypesTree = Collections.unmodifiableList(requiredTypesTree);
+		this.resolvedRequiredTypes = Collections.unmodifiableSortedMap(resolvedRequiredTypes);
+		this.requiredBlueprints = Collections.unmodifiableList(requiredBlueprints);
+
 	}
 
 	/**
-	 * Get the components required to build the blueprint, and their quantities.
+	 * Get the types required for this blueprint as a tree. This list contains the first level of the tree, which is the types directly
+	 * required by this blueprint. Each type may itself contain a list of types it requires, and so forth.
 	 * <p>
-	 * Returns a map where the key is the required component, and the value is the number required
+	 * This includes types which are marked for {@link RequiredType#getDecompositionState() decomposition}
 	 * 
-	 * @return A map from required component to required units, ordered by name
+	 * @return The types required for a blueprint as a tree
 	 */
-	public SortedMap<Component, Integer> getRequiredComponents() {
-		return this.requiredComponents;
+	public List<RequiredType<? extends AbstractType>> getRequiredTypesTree() {
+		return this.requiredTypesTree;
 	}
 
 	/**
-	 * Get the minerals required to build the blueprint, and their quantities.
-	 * <p>
-	 * Returns a map where the key is the required mineral, and the value is the number required
+	 * Get the blueprints which are configured to be decomposed to create this blueprint, including this blueprint.
 	 * 
-	 * @return A map from required mineral to required units, ordered by name
+	 * @return A list of blueprints which must be made in order to make this blueprint. Never null or empty
+	 * @see RequiredType#getDecompositionState()
 	 */
-	public SortedMap<Mineral, Integer> getRequiredMinerals() {
-		return this.requiredMinerals;
+	public List<RequiredBlueprint> getRequiredBlueprints() {
+		return this.requiredBlueprints;
 	}
 
 	/**
-	 * Gets the required minerals and components required to build a blueprint, and their quantities
+	 * Get the types required for this blueprint. This list contains the aggregate types required directly by this blueprint and by its
+	 * required types which may have been marked for {@link RequiredType#getDecompositionState() decomposition}.
 	 * <p>
-	 * Returns a map where the key is the required type, and the value if the number required
+	 * Any types marked for {@link RequiredType#getDecompositionState() decomposition} will not appear in this map, but will be replaced by
+	 * their own required types.
 	 * 
-	 * @return A map from required types to required units, ordered by name
+	 * @return The resolved types required for a blueprint
 	 */
-	public SortedMap<? extends AbstractType, Integer> getAllRequiredTypes() {
-		final SortedMap<AbstractType, Integer> allTypes = new TreeMap<>();
-		
-		allTypes.putAll(this.requiredComponents);
-		allTypes.putAll(this.requiredMinerals);
-		
-		return allTypes;
+	public SortedMap<? extends AbstractType, Integer> getResolvedRequiredTypes() {
+		return this.resolvedRequiredTypes;
 	}
 }

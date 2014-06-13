@@ -8,6 +8,7 @@
 	<head>
 		<title>EVE Blueprint Tool</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="context-root" content="<c:url value="" />" />
 		<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 		<link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet">
 		<link href="<c:url value="/resources/css/core.css" />" rel="stylesheet" media="screen" />

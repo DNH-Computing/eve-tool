@@ -23,6 +23,11 @@ public abstract class AbstractTypeImpl extends AbstractSortableTypeImpl {
 		public boolean isMineral() {
 			return true;
 		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			return obj instanceof MineralImpl && super.equals(obj);
+		}
 	}
 
 	public static class ComponentImpl extends AbstractTypeImpl implements
@@ -39,6 +44,11 @@ public abstract class AbstractTypeImpl extends AbstractSortableTypeImpl {
 		@Override
 		public boolean isMineral() {
 			return false;
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			return obj instanceof ComponentImpl && super.equals(obj);
 		}
 	}
 

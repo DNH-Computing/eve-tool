@@ -32,13 +32,14 @@
 				</div>
 			</div>
 			
+			<%--TODO Add a spinner here to make is clear that the page is doing something (and probably update the button to be not clickabale) --%>
 			<div class="control-group">
 				<input type="hidden" name="quantity" value="1" />
 				<label class="control-label" for="saleValue">Sale Value per <span>1</span>:</label>
 				<div class="controls">
 					<div class="input-append">
 						<input type="text" name="saleValue" value="${form.saleValue}" required="required" 
-						pattern="[0-9]+\.[0-9]{2}" title="Please enter a currency including the cost to two decimal places" />
+						pattern="[0-9]+(\.[0-9]{1,2})?" title="Please enter a currency including the cost to two decimal places" />
 						<span class="add-on">ISK</span>
 					</div>
 				</div>
@@ -136,7 +137,8 @@
 			if (blueprintId == '')
 				return;
 			
-			$.get('/price/blueprint/'+blueprintId, function (data) {
+			var url = '<c:url value="/price/blueprint/" />';
+			$.get(url+blueprintId, function (data) {
 				if (data.value == -1)
 					alert('Error retrieving marker information');
 				else

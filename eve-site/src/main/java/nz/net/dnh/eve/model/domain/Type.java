@@ -81,6 +81,10 @@ public class Type extends AbstractLastUpdatedBean implements Serializable {
 		return this.type;
 	}
 
+	public void setType(final InventoryType type) {
+		this.type = type;
+	}
+
 	public void setRequiredBy(final Collection<BlueprintRequiredType> requiredBy) {
 		this.requiredBy = requiredBy;
 	}

@@ -25,7 +25,7 @@
 				<div class="controls">
 					<div class="input-append">
 						<input type="text" name="cost" value="" required="required"
-							pattern="[0-9]+\.[0-9]{2}" title="Please enter a currency including the cost to two decimal places" />
+							pattern="[0-9]+(\.[0-9]{1,2})?" title="Please enter a currency including the cost to two decimal places" />
 						<span class="add-on">ISK</span>
 					</div>
 				</div>
@@ -66,7 +66,8 @@
 		else if ($(this).val() == "1") {
 			$saleValueField.prop('disabled', true);
 			
-			$.get('/price/'+typeId, function (data) {
+			var url = '<c:url value="/price/" />';
+			$.get(url+typeId, function (data) {
 				if (data.value == -1)
 					alert('Error retrieving market information');
 				else

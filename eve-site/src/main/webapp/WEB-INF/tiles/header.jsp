@@ -33,7 +33,8 @@
 			var $this = $(this);
 			$(this).prop('disabled', true);
 			
-			$.post('/price/update_all', function (data) {
+			var url = '<c:url value="/price/update_all" />';
+			$.post(url, function (data) {
 				$this.prop('disabled', false);
 				
 				if (data == true)

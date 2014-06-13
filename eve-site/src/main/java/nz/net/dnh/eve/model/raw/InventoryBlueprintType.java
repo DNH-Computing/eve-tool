@@ -105,6 +105,10 @@ public class InventoryBlueprintType implements Serializable {
 		return this.productType;
 	}
 
+	public void setProductType(final InventoryType productType) {
+		this.productType = productType;
+	}
+
 	public Integer getProductionTime() {
 		return this.productionTime;
 	}

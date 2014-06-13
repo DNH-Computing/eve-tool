@@ -14,3 +14,7 @@ target
 
 # Local property overrides
 eve-site/src/main/resources/local.properties
+
+# Sublime Text files
+*.sublime-project
+*.sublime-workspace

@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import nz.net.dnh.eve.business.AbstractType;
 import nz.net.dnh.eve.business.BlueprintReference;
@@ -15,7 +13,6 @@ import nz.net.dnh.eve.business.Component;
 import nz.net.dnh.eve.business.MarketPrice;
 import nz.net.dnh.eve.business.MarketPrices;
 import nz.net.dnh.eve.business.Mineral;
-import nz.net.dnh.eve.business.RequiredTypes;
 import nz.net.dnh.eve.business.TypeReference;
 import nz.net.dnh.eve.business.TypeService;
 import nz.net.dnh.eve.business.impl.dto.type.AbstractMissingTypeImpl;
@@ -29,8 +26,11 @@ import nz.net.dnh.eve.market.eve_central.EveCentralMarketStatResponse;
 import nz.net.dnh.eve.market.eve_central.EveCentralMarketStatResponse.MarketStatData;
 import nz.net.dnh.eve.model.domain.Blueprint;
 import nz.net.dnh.eve.model.domain.BlueprintRequiredType;
+import nz.net.dnh.eve.model.domain.BlueprintTypeDecomposition;
+import nz.net.dnh.eve.model.domain.BlueprintTypeDecomposition.BlueprintTypePK;
 import nz.net.dnh.eve.model.domain.Type;
 import nz.net.dnh.eve.model.raw.InventoryType;
+import nz.net.dnh.eve.model.repository.BlueprintTypeDecompositionRepository;
 import nz.net.dnh.eve.model.repository.InventoryTypeRepository;
 import nz.net.dnh.eve.model.repository.TypeRepository;
 
@@ -47,6 +47,9 @@ public class TypeServiceImpl implements TypeService {
 
 	@Autowired
 	private InventoryTypeRepository inventoryTypeRepository;
+
+	@Autowired
+	private BlueprintTypeDecompositionRepository blueprintTypeDecompositionRepository;
 
 	@Autowired
 	private BlueprintResolverService blueprintResolverService;
@@ -114,40 +117,9 @@ public class TypeServiceImpl implements TypeService {
 	public List<? extends AbstractType> listMissingTypes(final BlueprintReference blueprintRef) {
 		final Blueprint blueprint = this.blueprintResolverService.toBlueprint(blueprintRef);
 		final List<AbstractType> missingTypes = new ArrayList<>();
-		TypeServiceImpl.addMinerals(this.inventoryTypeRepository.findUnknownMineralsForBlueprint(blueprint), missingTypes);
-		TypeServiceImpl.addComponents(this.inventoryTypeRepository.findUnknownComponentsForBlueprint(blueprint), missingTypes);
+		addMinerals(this.inventoryTypeRepository.findUnknownMineralsForBlueprint(blueprint), missingTypes);
+		addComponents(this.inventoryTypeRepository.findUnknownComponentsForBlueprint(blueprint), missingTypes);
 		return missingTypes;
-	}
-
-	@Override
-	public RequiredTypes getRequiredTypes(final BlueprintReference blueprintRef) {
-		final Blueprint blueprint = this.blueprintResolverService.toBlueprint(blueprintRef);
-		final SortedMap<Component, Integer> requiredComponents = new TreeMap<>();
-		final SortedMap<Mineral, Integer> requiredMinerals = new TreeMap<>();
-
-		for (final BlueprintRequiredType requiredType : blueprint.getRequiredTypes()) {
-			final int units = requiredType.getUnits();
-			final Type type = requiredType.getType();
-			final InventoryType inventoryType = requiredType.getInventoryType();
-			if (inventoryType.isMineral()) {
-				final Mineral mineral;
-				if (type != null) {
-					mineral = new MineralImpl(type);
-				} else {
-					mineral = new MissingMineralImpl(inventoryType);
-				}
-				requiredMinerals.put(mineral, units);
-			} else {
-				final Component component;
-				if (type != null) {
-					component = new ComponentImpl(type);
-				} else {
-					component = new MissingComponentImpl(inventoryType);
-				}
-				requiredComponents.put(component, units);
-			}
-		}
-		return new RequiredTypes(requiredComponents, requiredMinerals);
 	}
 
 	@Override
@@ -276,8 +248,8 @@ public class TypeServiceImpl implements TypeService {
 			final TypeReference typeReference = typeIds.get(responseType
 					.getId());
 
-			AbstractType businessType;
 			final Type type = toType(typeReference);
+			AbstractType businessType;
 			if (type == null) {
 				final InventoryType inventoryType = toInventoryType(typeReference);
 
@@ -315,5 +287,28 @@ public class TypeServiceImpl implements TypeService {
 		}
 
 		return types;
+	}
+
+	@Override
+	public void updateRequiredType(final BlueprintReference blueprint, final TypeReference type, final boolean decompose) {
+		final Blueprint blueprintBean = this.blueprintResolverService.toBlueprint(blueprint);
+		final InventoryType inventoryType = toInventoryType(type);
+		assertTypeRequired(blueprintBean, inventoryType);
+		final BlueprintTypePK key = new BlueprintTypePK(blueprintBean, inventoryType);
+
+		final BlueprintTypeDecomposition existingDecomposition = this.blueprintTypeDecompositionRepository.findOne(key);
+		if (decompose && existingDecomposition == null) {
+				this.blueprintTypeDecompositionRepository.save(new BlueprintTypeDecomposition(key));
+		} else if (!decompose && existingDecomposition != null) {
+			this.blueprintTypeDecompositionRepository.delete(existingDecomposition);
+		}
+	}
+
+	private static void assertTypeRequired(final Blueprint blueprintBean, final InventoryType inventoryType) {
+		for (final BlueprintRequiredType requiredType : blueprintBean.getRequiredTypes()) {
+			if (requiredType.getInventoryType().equals(inventoryType))
+				return;
+		}
+		throw new IllegalArgumentException("Type " + inventoryType + " is not required by " + blueprintBean);
 	}
 }

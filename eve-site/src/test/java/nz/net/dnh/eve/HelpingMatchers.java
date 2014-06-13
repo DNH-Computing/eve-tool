@@ -19,6 +19,14 @@ public class HelpingMatchers {
 	public static <E> Matcher<Iterable<? extends E>> contains(final Matcher<? super E>... items) {
 		return Matchers.contains(items);
 	}
+	
+	/**
+	 * @see Matchers#contains(T...)
+	 */
+	@SafeVarargs
+	public static <E> Matcher<Iterable<? extends E>> contains(final E... items) {
+		return Matchers.contains(items);
+	}
 
 	/**
 	 * @see Matchers#containsInAnyOrder(Matcher...)
@@ -29,23 +37,19 @@ public class HelpingMatchers {
 	}
 
 	/**
-	 * Allow overriding the generic type of the matcher for Mockito
-	 * 
-	 * @see Matchers#greaterThanOrEqualTo(Comparable)
-	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <U extends T, T extends java.lang.Comparable<T>> org.hamcrest.Matcher<U> greaterThanOrEqualTo(final T value) {
-		return (Matcher) Matchers.greaterThanOrEqualTo(value);
-	}
-
-	/**
-	 * Allow overriding the generic type of the matcher for Mockito
-	 * 
 	 * @see Matchers#greaterThan(Comparable)
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static <U extends T, T extends java.lang.Comparable<T>> org.hamcrest.Matcher<U> greaterThan(final T value) {
-		return (Matcher) Matchers.greaterThan(value);
+	public static <T extends java.lang.Comparable<? super T>> org.hamcrest.Matcher<T> greaterThan(final T value) {
+		return Matchers.greaterThan((Comparable) value);
+	}
+
+	/**
+	 * @see Matchers#lessThan(Comparable)
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static <T extends java.lang.Comparable<? super T>> org.hamcrest.Matcher<T> lessThan(final T value) {
+		return Matchers.lessThan((Comparable) value);
 	}
 
 	/**

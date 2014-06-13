@@ -23,6 +23,11 @@ public abstract class AbstractMissingTypeImpl extends AbstractSortableTypeImpl {
 		public boolean isMineral() {
 			return true;
 		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			return obj instanceof MissingMineralImpl && super.equals(obj);
+		}
 	}
 
 	public static class MissingComponentImpl extends AbstractMissingTypeImpl
@@ -39,6 +44,11 @@ public abstract class AbstractMissingTypeImpl extends AbstractSortableTypeImpl {
 		@Override
 		public boolean isMineral() {
 			return false;
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			return obj instanceof MissingComponentImpl && super.equals(obj);
 		}
 	}
 

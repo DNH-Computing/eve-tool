@@ -5,9 +5,12 @@ import nz.net.dnh.eve.business.BlueprintReference;
 
 import org.springframework.beans.factory.annotation.Value;
 
+import com.google.common.annotations.VisibleForTesting;
+
 public final class ImageURILocater {
+	@VisibleForTesting
 	@Value("${eve.imageBaseURI}")
-	private String baseLocatorURI;
+	String baseLocatorURI;
 
 	public String getUriForType(final AbstractType type, final long size) {
 		return getUriForTypeID(type.getId(), size);

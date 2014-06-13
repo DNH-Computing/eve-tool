@@ -17,20 +17,20 @@ import javax.validation.constraints.NotNull;
 @Table(name = "invTypes")
 @NamedQueries({
 		@NamedQuery(name = "InventoryType.findUnknownMineralsForBlueprint", query = InventoryType.UNKNOWN_TYPES_SQL
-				+ InventoryType.MINERAL_SQL + " AND brt.blueprint = :blueprint" + InventoryType.ORDER_BY_NAME),
+				+ InventoryType.MINERAL_SQL + " AND brt.id.blueprint = :blueprint" + InventoryType.ORDER_BY_NAME),
 		@NamedQuery(name = "InventoryType.findUnknownMinerals", query = InventoryType.UNKNOWN_TYPES_SQL + InventoryType.MINERAL_SQL
 				+ InventoryType.ORDER_BY_NAME),
 		@NamedQuery(name = "InventoryType.findUnknownComponentsForBlueprint", query = InventoryType.UNKNOWN_TYPES_SQL
-				+ InventoryType.COMPONENT_SQL + " AND brt.blueprint = :blueprint" + InventoryType.ORDER_BY_NAME),
+				+ InventoryType.COMPONENT_SQL + " AND brt.id.blueprint = :blueprint" + InventoryType.ORDER_BY_NAME),
 		@NamedQuery(name = "InventoryType.findUnknownComponents", query = InventoryType.UNKNOWN_TYPES_SQL + InventoryType.COMPONENT_SQL
 				+ InventoryType.ORDER_BY_NAME) })
 public class InventoryType implements Serializable {
 	// t.cost is not a nullable column, so this really checks whether t is null
-	public static final String UNKNOWN_TYPES_SQL = "SELECT DISTINCT brt.inventoryType FROM BlueprintRequiredType brt LEFT OUTER JOIN brt.type t WHERE t.cost IS NULL";
-	public static final String MINERAL_SQL = " AND brt.inventoryType.group.groupName = '"
+	public static final String UNKNOWN_TYPES_SQL = "SELECT DISTINCT brt.id.inventoryType FROM BlueprintRequiredType brt LEFT OUTER JOIN brt.type t WHERE t.cost IS NULL";
+	public static final String MINERAL_SQL = " AND brt.id.inventoryType.group.groupName = '"
 			+ InventoryGroup.MINERAL_GROUP + "'";
-	public static final String COMPONENT_SQL = " AND brt.inventoryType.group.groupName != '" + InventoryGroup.MINERAL_GROUP + "'";
-	public static final String ORDER_BY_NAME = " ORDER BY brt.inventoryType.typeName";
+	public static final String COMPONENT_SQL = " AND brt.id.inventoryType.group.groupName != '" + InventoryGroup.MINERAL_GROUP + "'";
+	public static final String ORDER_BY_NAME = " ORDER BY brt.id.inventoryType.typeName";
 
 	private static final long serialVersionUID = 1L;
 
@@ -56,11 +56,7 @@ public class InventoryType implements Serializable {
 
 	private Integer portionSize;
 
-	private Integer raceID;
-
 	private BigDecimal basePrice;
-
-	private Integer published;
 
 	private Integer marketGroupID;
 
@@ -137,28 +133,12 @@ public class InventoryType implements Serializable {
 		this.portionSize = portionSize;
 	}
 
-	public Integer getRaceID() {
-		return this.raceID;
-	}
-
-	public void setRaceID(final Integer raceID) {
-		this.raceID = raceID;
-	}
-
 	public BigDecimal getBasePrice() {
 		return this.basePrice;
 	}
 
 	public void setBasePrice(final BigDecimal basePrice) {
 		this.basePrice = basePrice;
-	}
-
-	public Integer getPublished() {
-		return this.published;
-	}
-
-	public void setPublished(final Integer published) {
-		this.published = published;
 	}
 
 	public Integer getMarketGroupID() {
@@ -179,14 +159,9 @@ public class InventoryType implements Serializable {
 
 	@Override
 	public String toString() {
-		return "InventoryType [typeID=" + this.typeID + ", group=" + this.group
-				+ ", typeName=" + this.typeName + ", description="
-				+ this.description + ", mass=" + this.mass + ", volume="
-				+ this.volume + ", capacity=" + this.capacity
-				+ ", portionSize=" + this.portionSize + ", raceID="
-				+ this.raceID + ", basePrice=" + this.basePrice
-				+ ", published=" + this.published + ", marketGroupID="
-				+ this.marketGroupID + ", chanceOfDuplicating="
+		return "InventoryType [typeID=" + this.typeID + ", group=" + this.group + ", typeName=" + this.typeName + ", description="
+				+ this.description + ", mass=" + this.mass + ", volume=" + this.volume + ", capacity=" + this.capacity + ", portionSize="
+				+ this.portionSize + ", basePrice=" + this.basePrice + ", marketGroupID=" + this.marketGroupID + ", chanceOfDuplicating="
 				+ this.chanceOfDuplicating + "]";
 	}
 
