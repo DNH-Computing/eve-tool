@@ -66,6 +66,13 @@ public final class BlueprintForm {
 		return this.automaticPriceUpdate;
 	}
 
+	@Override
+	public String toString() {
+		return "BlueprintForm [saleValue=" + this.saleValue + ", numberPerRun=" + this.numberPerRun + ", materialEfficency="
+				+ this.materialEfficency + ", productionEffiecincy=" + this.productionEffiecincy + ", automaticPriceUpdate="
+				+ this.automaticPriceUpdate + "]";
+	}
+
 	public boolean getAutomaticPriceUpdate() {
 		return this.automaticPriceUpdate;
 	}

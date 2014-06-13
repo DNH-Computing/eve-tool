@@ -6,6 +6,8 @@ import nz.net.dnh.eve.business.TypeIdReference;
 import nz.net.dnh.eve.business.TypeReference;
 import nz.net.dnh.eve.business.TypeService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,12 +19,20 @@ import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 public class TypeController {
+	private static final Logger LOG = LoggerFactory.getLogger(TypeController.class);
+
+	private final TypeService typeService;
+
 	@Autowired
-	private TypeService typeService;
+	public TypeController(final TypeService typeService) {
+		this.typeService = typeService;
+	}
 
 	@RequestMapping(value = "/types/{id}", method = RequestMethod.POST)
 	public RedirectView updateType(@PathVariable("id") final int typeId, @RequestParam("return") final String returnUri,
 			@ModelAttribute final TypeForm typeInfo) {
+		LOG.trace("Upating type {} with new data: {}", typeId, typeInfo);
+
 		final TypeReference type = new TypeIdReference(typeId);
 		if (typeInfo.isMissing()) {
 			// Create a missing mineral or component
@@ -40,6 +50,7 @@ public class TypeController {
 			}
 		}
 
+		LOG.debug("Redirecting to: {}", returnUri);
 		return new RedirectView(returnUri);
 	}
 
@@ -79,6 +90,12 @@ public class TypeController {
 
 		public void setAutoUpdate(final boolean autoUpdate) {
 			this.autoUpdate = autoUpdate;
+		}
+
+		@Override
+		public String toString() {
+			return "TypeForm [cost=" + this.cost + ", missing=" + this.missing + ", mineral=" + this.mineral + ", autoUpdate="
+					+ this.autoUpdate + "]";
 		}
 	}
 }

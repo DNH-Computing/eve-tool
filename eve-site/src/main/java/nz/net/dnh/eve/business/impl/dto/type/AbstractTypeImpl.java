@@ -89,7 +89,7 @@ public abstract class AbstractTypeImpl extends AbstractSortableTypeImpl {
 
 	@Override
 	public String toString() {
-		return "[name=" + getName() + ", cost=" + getCost()
+		return "[id= " + getId() + ", name=" + getName() + ", cost=" + getCost()
 				+ ", costLastUpdated=" + getCostLastUpdated() + "]";
 	}
 

@@ -135,10 +135,9 @@ public class Blueprint extends AbstractLastUpdatedBean implements Serializable {
 	}
 
 	public InventoryBlueprintType getBlueprintType() {
-		if (this.blueprintType == null) {
+		if (this.blueprintType == null)
 			throw new IllegalStateException("Missing raw record for blueprint " + this.blueprintTypeID
 					+ ". You may need to import an updated EVE dump.");
-		}
 		return this.blueprintType;
 	}
 
@@ -151,7 +150,7 @@ public class Blueprint extends AbstractLastUpdatedBean implements Serializable {
 		return "Blueprint [blueprintTypeID=" + this.blueprintTypeID + ", blueprintType=" + this.blueprintType + ", numberPerRun="
 				+ this.numberPerRun + ", productionEfficiency=" + this.productionEfficiency + ", saleValue=" + this.saleValue
 				+ ", materialEfficiency=" + this.materialEfficiency + ", automaticallyUpdateSalePrice=" + this.automaticallyUpdateSalePrice
-				+ ", costSummary=" + this.costSummary + ", requiredTypes=" + this.requiredTypes + "]";
+				+ ", costSummary=" + this.costSummary + "]";
 	}
 
 	@Override
