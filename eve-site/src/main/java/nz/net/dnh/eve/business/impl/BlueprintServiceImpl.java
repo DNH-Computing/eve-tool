@@ -1,7 +1,8 @@
 package nz.net.dnh.eve.business.impl;
 
+import static java.util.stream.Collectors.toList;
+
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -52,13 +53,9 @@ public class BlueprintServiceImpl implements BlueprintService {
 
 	@Override
 	public List<BlueprintSummary> listSummaries() {
-		final List<Blueprint> blueprints = this.blueprintRepository.findAll(SORT_BY_NAME);
-		final List<BlueprintSummary> blueprintSummaries = new ArrayList<>(
-				blueprints.size());
-		for (final Blueprint blueprint : blueprints) {
-			blueprintSummaries.add(new BlueprintSummaryImpl(blueprint, this.blueprintRequiredTypesService));
-		}
-		return blueprintSummaries;
+		return this.blueprintRepository.findAll(SORT_BY_NAME).stream()
+				.map(blueprint -> new BlueprintSummaryImpl(blueprint, this.blueprintRequiredTypesService))
+				.collect(toList());
 	}
 
 	private boolean isAlreadyKnownToSystem(final BlueprintReference blueprintReference) {
@@ -75,11 +72,8 @@ public class BlueprintServiceImpl implements BlueprintService {
 	}
 
 	private static Page<CandidateBlueprint> toCandidateBlueprints(final Pageable page, final Page<InventoryBlueprintType> unknownBlueprints) {
-		final List<CandidateBlueprint> candidateBlueprints = new ArrayList<>(unknownBlueprints.getNumberOfElements());
-		for (final InventoryBlueprintType inventoryBlueprint : unknownBlueprints) {
-			candidateBlueprints.add(new CandidateBlueprintImpl(inventoryBlueprint));
-		}
-		return new PageImpl<>(candidateBlueprints, page, unknownBlueprints.getTotalElements());
+		return new PageImpl<>(unknownBlueprints.getContent().stream().map(CandidateBlueprintImpl::new).collect(toList()), page,
+				unknownBlueprints.getTotalElements());
 	}
 
 	@Override
@@ -108,7 +102,7 @@ public class BlueprintServiceImpl implements BlueprintService {
 	}
 
 	@Override
-	public BlueprintSummary createBlueprint(final BlueprintReference blueprintReference, BigDecimal saleValue,
+	public BlueprintSummary createBlueprint(final BlueprintReference blueprintReference, final BigDecimal saleValue,
 			final int numberPerRun, final int productionEfficiency, final int materialEfficiency, final Boolean automaticallyUpdateSalePrice) {
 		// Check it doesn't already exist
 		if (this.blueprintRepository.exists(blueprintReference.getId()))
@@ -116,15 +110,12 @@ public class BlueprintServiceImpl implements BlueprintService {
 		// Check it matches something in the EVE dump
 		if (!this.inventoryBlueprintTypeRepository.exists(blueprintReference.getId()))
 			throw new IllegalArgumentException("The blueprint " + blueprintReference + " does not match any InventoryBlueprintType");
-		if (saleValue == null && automaticallyUpdateSalePrice != true)
+		if (saleValue == null && automaticallyUpdateSalePrice)
 			throw new IllegalArgumentException("Sale value cannot be null if automatic updates are set to off");
 
-		if (automaticallyUpdateSalePrice) {
-			saleValue = new BigDecimal(0);
-		}
-
 		// Create it
-		final Blueprint newBlueprint = new Blueprint(blueprintReference.getId(), numberPerRun, productionEfficiency, saleValue,
+		final Blueprint newBlueprint = new Blueprint(blueprintReference.getId(), numberPerRun, productionEfficiency,
+				automaticallyUpdateSalePrice ? BigDecimal.ZERO : saleValue,
 				materialEfficiency, automaticallyUpdateSalePrice);
 		final Blueprint savedBlueprint = this.blueprintRepository.save(newBlueprint);
 		return new BlueprintSummaryImpl(savedBlueprint, this.blueprintRequiredTypesService);
@@ -176,13 +167,8 @@ public class BlueprintServiceImpl implements BlueprintService {
 
 	@Override
 	public Collection<BlueprintSummary> getBlueprintsForAutomaticUpdate() {
-		final Collection<Blueprint> blueprints = this.blueprintRepository.findAutomaticlyUpdating();
-		final ArrayList<BlueprintSummary> blueprintSummaries = new ArrayList<>(blueprints.size());
-		
-		for (final Blueprint b : blueprints) {
-			blueprintSummaries.add(new BlueprintSummaryImpl(b, this.blueprintRequiredTypesService));
-		}
-		
-		return blueprintSummaries;
+		return this.blueprintRepository.findAutomaticlyUpdating().stream()
+				.map(blueprint -> new BlueprintSummaryImpl(blueprint, this.blueprintRequiredTypesService))
+				.collect(toList());
 	}
 }
