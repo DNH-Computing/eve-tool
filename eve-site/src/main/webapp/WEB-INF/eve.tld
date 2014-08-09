@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_1.xsd"
+	version="2.1">
+	<tlib-version>1.0</tlib-version>
+	<short-name>EVE Tool Taglib</short-name>
+	<uri>urn:nz.net.dnh.eve.api_0_1</uri>
+
+	<function>
+		<name>getImageUriForTypeId</name>
+		<function-class>nz.net.dnh.eve.util.api_0_1.JspTagFunctions</function-class>
+		<function-signature>String getImageUriForTypeId(int, int)</function-signature>
+	</function>
+	
+	<function>
+		<name>getImageUriForType</name>
+		<function-class>nz.net.dnh.eve.util.api_0_1.JspTagFunctions</function-class>
+		<function-signature>String getImageUriForType(nz.net.dnh.eve.business.AbstractType, int)</function-signature>
+	</function>
+
+	<function>
+		<name>currency</name>
+		<function-class>nz.net.dnh.eve.util.api_0_1.JspTagFunctions</function-class>
+		<function-signature>String formatAsCurrency(java.lang.Object)</function-signature>
+	</function>
+
+	<function>
+		<name>percentage</name>
+		<function-class>nz.net.dnh.eve.util.api_0_1.JspTagFunctions</function-class>
+		<function-signature>String formatAsPercentage(java.lang.Object)</function-signature>
+	</function>
+
+	<tag-file>
+		<name>BlueprintList</name>
+		<path>/WEB-INF/tags/BlueprintList.tag</path>
+	</tag-file>
+
+	<tag-file>
+		<name>TypeList</name>
+		<path>/WEB-INF/tags/TypeList.tag</path>
+	</tag-file>
+
+	<tag-file>
+		<name>Template</name>
+		<path>/WEB-INF/tags/Template.tag</path>
+	</tag-file>
+
+	<tag-file>
+		<name>ChangeTypeCostModal</name>
+		<path>/WEB-INF/tags/ChangeTypeCostModal.tag</path>
+	</tag-file>
+</taglib>

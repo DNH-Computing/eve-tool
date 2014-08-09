@@ -235,6 +235,11 @@
             <artifactId>javassist</artifactId>
             <version>3.18.2-GA</version>
         </dependency>
+        <dependency>
+        	<groupId>net.sourceforge.stripes</groupId>
+        	<artifactId>stripes</artifactId>
+        	<version>1.5.8</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins> 
