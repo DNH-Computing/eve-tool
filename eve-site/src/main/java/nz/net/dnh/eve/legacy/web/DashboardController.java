@@ -1,4 +1,4 @@
-package nz.net.dnh.eve.web;
+package nz.net.dnh.eve.legacy.web;
 
 import static java.util.stream.Collectors.toList;
 

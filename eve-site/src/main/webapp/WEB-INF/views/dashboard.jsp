@@ -1,4 +1,3 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="eve" uri="urn:nz.net.dnh.eve.api_0_1" %>
 
 <eve:Template>

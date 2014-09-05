@@ -1,8 +1,7 @@
+<%@ tag body-content="scriptless" %>
 <!DOCTYPE html>
-<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
-<%@ taglib uri="http://tiles.apache.org/tags-tiles-extras" prefix="tilesx"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="partial" tagdir="/WEB-INF/tags/partial" %>
+<%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 	<head>
@@ -23,7 +22,7 @@
 	</head>
 	
 	<body>
-		<partial:Header />
+		<template:Header />
 		
 		<!-- Page content -->
 		<noscript>
@@ -42,6 +41,6 @@
 		
 		<!-- End of page content -->
 		
-		<partial:Footer />
+		<template:Footer />
 	</body>
 </html>

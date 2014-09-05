@@ -1,7 +1,7 @@
 /**
  * 
  */
-package nz.net.dnh.eve.dashboard;
+package nz.net.dnh.eve.web.dashboard;
 
 import static java.util.stream.Collectors.toList;
 
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 /**
  * The action bean backing the display of the Eve Tool's Dashboard.
  */
-@UrlBinding("/dashboard.action")
+@UrlBinding("/dashboard")
 public class DashboardActionBean extends AbstractActionBean {
 	private static final Logger LOG = LoggerFactory.getLogger(DashboardActionBean.class);
 

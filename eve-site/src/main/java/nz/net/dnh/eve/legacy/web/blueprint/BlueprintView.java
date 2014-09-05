@@ -1,7 +1,7 @@
 /**
  * 
  */
-package nz.net.dnh.eve.web.blueprint;
+package nz.net.dnh.eve.legacy.web.blueprint;
 
 import nz.net.dnh.eve.business.BlueprintSummary;
 import nz.net.dnh.eve.business.RequiredTypes;

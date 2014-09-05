@@ -1,4 +1,4 @@
-package nz.net.dnh.eve.web;
+package nz.net.dnh.eve.legacy.web;
 
 import java.math.BigDecimal;
 import java.util.Arrays;

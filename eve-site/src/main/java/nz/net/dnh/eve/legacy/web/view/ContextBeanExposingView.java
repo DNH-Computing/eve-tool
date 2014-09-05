@@ -1,4 +1,4 @@
-package nz.net.dnh.eve.web.view;
+package nz.net.dnh.eve.legacy.web.view;
 
 import java.util.Map;
 

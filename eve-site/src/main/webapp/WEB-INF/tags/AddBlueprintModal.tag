@@ -1,3 +1,4 @@
+<%@ tag body-content="empty" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
@@ -5,7 +6,7 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 
 <div id="new-blueprint" class="modal hide fade" data-reset-on-close="true" data-focus-on-open="true">
-	<form class="form-horizontal" action="<s:url value="/blueprints/new" />?return=${pageContext.request.getAttribute("javax.servlet.forward.request_uri")}" method="post" autocomplete="off">
+	<form class="form-horizontal" action="<s:url value="/blueprints/new" />?return=${pageContext.request.getAttribute('javax.servlet.forward.request_uri')}" method="post" autocomplete="off">
 		<header class="modal-header">
 			<button type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Add a new blueprint</h3>

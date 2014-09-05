@@ -3,9 +3,11 @@
  */
 package nz.net.dnh.eve.util.api_0_1;
 
+import java.util.Calendar;
+
 import nz.net.dnh.eve.business.AbstractType;
-import nz.net.dnh.eve.web.view.ImageURILocater;
-import nz.net.dnh.eve.web.view.NumberFormatter;
+import nz.net.dnh.eve.legacy.web.view.ImageURILocater;
+import nz.net.dnh.eve.legacy.web.view.NumberFormatter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +48,16 @@ public class JspTagFunctions {
 		LOG.trace("Formatting '{}' as a percentage", value);
 
 		return percentageFormatter.format(value);
+	}
+
+	public static boolean isTypeDataOld(final AbstractType type) {
+		if (type.getCostLastUpdated() == null)
+			return false;
+
+		final Calendar timeWhenDataIsStale = Calendar.getInstance();
+		timeWhenDataIsStale.add(Calendar.DAY_OF_MONTH, -7);
+
+		return timeWhenDataIsStale.getTime().after(type.getCostLastUpdated());
 	}
 
 	@Component

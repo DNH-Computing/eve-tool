@@ -1,16 +1,12 @@
-<%@ page import="java.util.Calendar"%>
+<%@ attribute name="blueprint" type="nz.net.dnh.eve.business.BlueprintSummary" required="true" %>
+<%@ attribute name="formModel" type="nz.net.dnh.eve.web.blueprint.BlueprintDetailsFormModel" required="true" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
-<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
-<%@ taglib uri="http://tiles.apache.org/tags-tiles-extras" prefix="tilesx"%>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="security"%>
-
-<tiles:importAttribute name="blueprint" />
-<tiles:importAttribute name="form" />
+<%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes-dynattr.tld" %>
 
 <div id="update-blueprint-details" class="modal hide fade" data-reset-on-close="true" data-focus-on-open="true">
-	<form class="form-horizontal" action="<s:url value="/blueprints/${blueprint.id}" />" method="post" autocomplete="off" data-automatic-update="${blueprint.automaticallyUpdateSalePrice ? "yes" : "no"}">
+	<stripes:form class="form-horizontal" beanclass="nz.net.dnh.eve.web.blueprint.BlueprintDetailsActionBean" method="post" autocomplete="off" 
+			data-automatic-update="${blueprint.automaticallyUpdateSalePrice ? 'yes' : 'no'}" >
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal">&times;</button>
 			<h3>Edit the sale price of the ${blueprint.name}</h3>
@@ -19,10 +15,10 @@
 			<div class="control-group">
 				<label class="control-label">Price Update Policy</label>
 				<div class="controls">
-					<select name="automaticPriceUpdate" class="input input-xlarge">
-						<option value="1">Automatically update the Sale Price</option>
-						<option value="0" selected="selected">Manually update the Sale Price</option>
-					</select>
+					<stripes:select name="formModel.automaticPriceUpdaManuallyte" class="input input-xlarge">
+						<stripes:option value="1">Automatically update the Sale Price</stripes:option>
+						<stripes:option value="0" selected="selected">Manually update the Sale Price</stripes:option>
+					</stripes:select>
 				</div>
 			</div>
 		
@@ -65,9 +61,9 @@
 		<div class="modal-footer">
 			<input type="hidden" name="blueprint-id" value="${blueprint.id}" />
 			<button type="reset" class="btn" data-dismiss="modal">Close</button>
-			<button type="submit" class="btn btn-primary" data-loading-text="Saving...">Save</button>
+			<button type="submit" name="update-blueprint" class="btn btn-primary" data-loading-text="Saving...">Save</button>
 		</div>
-	</form>
+	</stripes:form>
 </div>
 
 <script type="text/javascript">

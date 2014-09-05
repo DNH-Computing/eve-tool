@@ -11,14 +11,14 @@ import net.sourceforge.stripes.format.DefaultFormatterFactory;
 import net.sourceforge.stripes.format.Formatter;
 import net.sourceforge.stripes.integration.spring.SpringBean;
 import net.sourceforge.stripes.integration.spring.SpringHelper;
-import nz.net.dnh.eve.web.view.NumberFormatter;
+import nz.net.dnh.eve.legacy.web.view.NumberFormatter;
 
 /**
  * 
  */
 public class EveFormatterFactory extends DefaultFormatterFactory {
 	public static final String FORMAT_ISK = "isk";
-	public static final String FORMAT_PERCENTAGE = "isk";
+	public static final String FORMAT_PERCENTAGE = "percentage";
 	
 	@SpringBean("currencyFormatter")
 	private NumberFormatter iskFormatter;

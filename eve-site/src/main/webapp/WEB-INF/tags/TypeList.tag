@@ -1,5 +1,6 @@
+<%@ tag body-content="empty" %>
 <%@ attribute name="typeName" type="java.lang.String" required="true" %>
-<%@ attribute name="types" type="java.util.List" required="true" %>
+<%@ attribute name="types" type="java.util.Collection" required="true" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="stripes" uri="http://stripes.sourceforge.net/stripes.tld" %>
@@ -39,7 +40,7 @@
 				<td class="text-right">
 					<a class="btn btn-link reveal-icon no-padding" data-toggle="modal" data-target="#change-type-cost"
 							data-type-cost="${type.cost}" data-type-name="${type.name}" data-type-id="${type.id}" data-type-missing="${type.missing}" data-type-mineral="${type.mineral}" data-type-auto-update="${type.autoUpdate}">
-						<stripes:format value="${type.cost}" formatType="isk" />
+						<eve:Currency>${type.cost}</eve:Currency>
 						<i class="icon-pencil"></i>
 					</a>
 				</td>

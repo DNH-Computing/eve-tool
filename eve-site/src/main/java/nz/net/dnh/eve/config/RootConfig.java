@@ -5,11 +5,11 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Properties;
 
-import nz.net.dnh.eve.web.view.DateFormatDelegate;
-import nz.net.dnh.eve.web.view.DurationFormatter;
-import nz.net.dnh.eve.web.view.ImageURILocater;
-import nz.net.dnh.eve.web.view.NumberFormatter;
-import nz.net.dnh.eve.web.view.VersionReader;
+import nz.net.dnh.eve.legacy.web.view.DateFormatDelegate;
+import nz.net.dnh.eve.legacy.web.view.DurationFormatter;
+import nz.net.dnh.eve.legacy.web.view.ImageURILocater;
+import nz.net.dnh.eve.legacy.web.view.NumberFormatter;
+import nz.net.dnh.eve.legacy.web.view.VersionReader;
 
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;

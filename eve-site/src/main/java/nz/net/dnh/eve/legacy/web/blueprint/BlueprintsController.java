@@ -1,4 +1,4 @@
-package nz.net.dnh.eve.web.blueprint;
+package nz.net.dnh.eve.legacy.web.blueprint;
 
 import static java.util.stream.Collectors.toList;
 
@@ -12,7 +12,7 @@ import nz.net.dnh.eve.business.CandidateBlueprint;
 import nz.net.dnh.eve.business.RequiredTypes;
 import nz.net.dnh.eve.business.TypeIdReference;
 import nz.net.dnh.eve.business.TypeService;
-import nz.net.dnh.eve.web.view.ImageURILocater;
+import nz.net.dnh.eve.legacy.web.view.ImageURILocater;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

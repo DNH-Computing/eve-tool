@@ -2,7 +2,7 @@ package nz.net.dnh.eve.config;
 
 import java.util.List;
 
-import nz.net.dnh.eve.web.view.ContextBeanExposingView;
+import nz.net.dnh.eve.legacy.web.view.ContextBeanExposingView;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -54,7 +54,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 	public TilesViewResolver configureTilesViewResolver() {
 		return new TilesViewResolver() {
 			@Override
-			@SuppressWarnings("rawtypes")
+			@SuppressWarnings({ "rawtypes", "unchecked" })
 			protected Class getViewClass() {
 				return ContextBeanExposingView.class;
 			}

@@ -2,7 +2,7 @@ package nz.net.dnh.eve.market.eve_central;
 
 import java.util.Collection;
 
-import nz.net.dnh.eve.web.view.VersionReader;
+import nz.net.dnh.eve.legacy.web.view.VersionReader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

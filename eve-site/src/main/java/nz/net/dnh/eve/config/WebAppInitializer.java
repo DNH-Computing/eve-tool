@@ -14,9 +14,12 @@ import javax.servlet.ServletRegistration;
 
 import net.sourceforge.stripes.controller.StripesFilter;
 import net.sourceforge.stripes.integration.spring.SpringInterceptor;
+import nz.net.dnh.eve.stripes.api_0_1.CsrfInterceptor;
 import nz.net.dnh.eve.stripes.api_0_1.EveToolActionBeanContext;
 import nz.net.dnh.eve.stripes.api_0_1.EveToolActionBeanPopulatorInterceptor;
 import nz.net.dnh.eve.util.api_0_1.EveFormatterFactory;
+import nz.net.dnh.eve.web.blueprint.BlueprintDetailsActionBean;
+import nz.net.dnh.eve.web.dashboard.DashboardActionBean;
 
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
@@ -67,12 +70,18 @@ public class WebAppInitializer implements WebApplicationInitializer {
 			final ServletRegistration.Dynamic stripesDispatcher = servletContext
 					.addServlet("stripesDispatcher", net.sourceforge.stripes.controller.DispatcherServlet.class);
 			stripesDispatcher.setLoadOnStartup(1);
-			mappingConflicts.addAll(stripesDispatcher.addMapping("*.action"));
+			mappingConflicts.addAll(stripesDispatcher.addMapping("/"));
 
 			final FilterRegistration.Dynamic stripesFilter = servletContext.addFilter("stripesFilter", StripesFilter.class);
-			stripesFilter.setInitParameter("ActionResolver.Packages", "nz.net.dnh.eve.dashboard");
+			stripesFilter.setInitParameter(	"ActionResolver.Packages",
+											Lists.newArrayList(DashboardActionBean.class, BlueprintDetailsActionBean.class)
+													.stream()
+													.map(Class::getPackage)
+													.map(Package::getName)
+													.collect(joining(",")));
 			stripesFilter.setInitParameter(	"Interceptor.Classes",
-											Lists.newArrayList(SpringInterceptor.class, EveToolActionBeanPopulatorInterceptor.class)
+											Lists.newArrayList(SpringInterceptor.class, EveToolActionBeanPopulatorInterceptor.class,
+																CsrfInterceptor.class)
 													.stream()
 													.map(Class::getName)
 													.collect(joining(",")));
@@ -84,8 +93,10 @@ public class WebAppInitializer implements WebApplicationInitializer {
 													.collect(joining(",")));
 			stripesFilter.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "*.jsp");
 			stripesFilter.addMappingForServletNames(EnumSet.of(DispatcherType.REQUEST), true, "stripesDispatcher");
-
 		}
+
+		mappingConflicts
+				.addAll(servletContext.addServlet("default", "org.apache.catalina.servlets.DefaultServlet").addMapping("/resources/*"));
 
 		if (!mappingConflicts.isEmpty())
 			throw new IllegalStateException("'appServlet' cannot be mapped to '/' under Tomcat versions <= 7.0.14");

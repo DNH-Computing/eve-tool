@@ -1,4 +1,4 @@
-package nz.net.dnh.eve.web.blueprint;
+package nz.net.dnh.eve.legacy.web.blueprint;
 
 import java.util.Map;
 

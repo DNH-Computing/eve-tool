@@ -9,7 +9,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import nz.net.dnh.eve.business.AbstractType;
 import nz.net.dnh.eve.business.BlueprintReference;
-import nz.net.dnh.eve.web.view.ImageURILocater.Size;
+import nz.net.dnh.eve.legacy.web.view.ImageURILocater;
+import nz.net.dnh.eve.legacy.web.view.ImageURILocater.Size;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -22,7 +22,7 @@
 		<div class="clearfix"></div>
 		
 		<header>
-			Name
+			Name=
 			<span class="pull-right">Quantity</span>
 		</header>
 		<ul class="itemtree">
