@@ -315,7 +315,7 @@ public class BlueprintServiceTest {
 	public void createBlueprintNullSaleValue() {
 		when(this.blueprintRepository.exists(1)).thenReturn(false);
 		when(this.inventoryBlueprintTypeRepository.exists(1)).thenReturn(true);
-		this.service.createBlueprint(new BlueprintIdReference(1), null, 3, 4, 5, false);
+		this.service.createBlueprint(new BlueprintIdReference(1), null, 3, 4, 5, true);
 	}
 
 	@Test
