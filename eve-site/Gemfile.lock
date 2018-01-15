@@ -1,0 +1,15 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    java-properties (0.2.0)
+    mysql2 (0.4.10)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  java-properties
+  mysql2
+
+BUNDLED WITH
+   1.15.1
