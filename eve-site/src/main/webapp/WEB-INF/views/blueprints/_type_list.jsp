@@ -48,7 +48,7 @@
 				<td class="text-right"><c:out value="${requiredComponent.value}" /></td>
 				<td class="text-right">
 					<a class="btn btn-link reveal-icon no-padding" data-toggle="modal" data-target="#change-type-cost"
-							data-type-cost="${requiredComponent.key.cost}" data-type-name="${requiredComponent.key.name}" data-type-id="${requiredComponent.key.id}" data-type-missing="${requiredComponent.key.missing}" data-type-mineral="${requiredComponent.key.mineral}"  data-type-auto-update="${type.autoUpdate}">
+							data-type-cost="${requiredComponent.key.cost}" data-type-name="${requiredComponent.key.name}" data-type-id="${requiredComponent.key.id}" data-type-missing="${requiredComponent.key.missing}" data-type-mineral="${requiredComponent.key.mineral}"  data-type-auto-update="${requiredComponent.key.autoUpdate}">
 						${currencyFormatter.format(requiredComponent.key.cost)}<i class="icon-pencil"></i>
 					</a>
 				</td>
