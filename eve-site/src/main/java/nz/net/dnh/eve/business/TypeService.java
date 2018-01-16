@@ -148,16 +148,6 @@ public interface TypeService {
 	Component updateComponent(TypeReference component, BigDecimal cost, boolean autoUpdate);
 
 	/**
-	 * Get the current market data for the given types.
-	 *
-	 * @param types
-	 *            The types to query for
-	 * @return the current market data
-	 */
-	MarketPrices<? extends AbstractType> getMarketPrices(
-			Collection<TypeReference> types);
-
-	/**
 	 * @return all the types marked for auto update.
 	 */
 	public Collection<AbstractType> getTypesForAutomaticUpdate();

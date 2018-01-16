@@ -5,16 +5,17 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import nz.net.dnh.eve.business.AbstractType;
 import nz.net.dnh.eve.business.BlueprintService;
 import nz.net.dnh.eve.business.BlueprintSummary;
 import nz.net.dnh.eve.business.TypeService;
 import nz.net.dnh.eve.market.eve_central.EveCentralMarketStatResponse.Type;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import nz.net.dnh.eve.market.evemarketer.EveMarketerMarketRequester;
 
 @Service
 public class EveCentralMarketUpdator {
@@ -25,7 +26,7 @@ public class EveCentralMarketUpdator {
 	private TypeService typeService;
 
 	@Autowired
-	private EveCentralMarketStatRequester remoteMarketData;
+	private EveMarketerMarketRequester remoteMarketData;
 
 	private static final Logger logger = LoggerFactory.getLogger(EveCentralMarketUpdator.class);
 
@@ -40,9 +41,10 @@ public class EveCentralMarketUpdator {
 		logger.debug("Updating blueprints");
 		final Collection<BlueprintSummary> blueprintsToUpdate = this.blueprintService.getBlueprintsForAutomaticUpdate();
 		final Map<Integer, BlueprintSummary> typeIdsToQuery = new HashMap<>(blueprintsToUpdate.size());
-		
-		if (blueprintsToUpdate.size() == 0)
+
+		if (blueprintsToUpdate.size() == 0) {
 			return;
+		}
 
 		for (final BlueprintSummary b : blueprintsToUpdate) {
 			typeIdsToQuery.put(b.getProducedTypeID(), b);
@@ -51,9 +53,10 @@ public class EveCentralMarketUpdator {
 		logger.debug("Updating blueprints: {}", typeIdsToQuery.keySet());
 
 		final EveCentralMarketStatResponse response = this.remoteMarketData.getDataForType(typeIdsToQuery.keySet());
-		
-		if (response.getTypes().size() == 0)
+
+		if (response.getTypes().size() == 0) {
 			throw new InvalidMarketResponseException("There were no types in the response");
+		}
 
 		for (final Type type : response.getTypes()) {
 			final BigDecimal producedQuantity = new BigDecimal(typeIdsToQuery.get(type.getId()).getProducedQuantity());
@@ -71,17 +74,19 @@ public class EveCentralMarketUpdator {
 		final Collection<AbstractType> typesToUpdate = this.typeService.getTypesForAutomaticUpdate();
 		final Map<Integer, AbstractType> typeIdsToQuery = new HashMap<>(typesToUpdate.size());
 
-		if (typesToUpdate.size() == 0)
+		if (typesToUpdate.size() == 0) {
 			return;
+		}
 
 		for (final AbstractType t : typesToUpdate) {
 			typeIdsToQuery.put(t.getId(), t);
 		}
-		
+
 		final EveCentralMarketStatResponse response = this.remoteMarketData.getDataForType(typeIdsToQuery.keySet());
-		
-		if (response.getTypes().size() == 0)
+
+		if (response.getTypes().size() == 0) {
 			throw new InvalidMarketResponseException("There were no types in the response");
+		}
 
 		for (final Type type : response.getTypes()) {
 			final BigDecimal newValue = type.getSell().getMedian();

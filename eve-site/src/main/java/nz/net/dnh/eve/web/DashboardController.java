@@ -41,7 +41,7 @@ public final class DashboardController {
 	}
 
 	public class DashboardView {
-		private final Logger LOG = LoggerFactory.getLogger(DashboardView.class);
+		private final Logger VIEW_LOG = LoggerFactory.getLogger(DashboardView.class);
 
 		private final List<BlueprintSummary> blueprints;
 		private final List<Mineral> minerals;
@@ -54,8 +54,8 @@ public final class DashboardController {
 			this.minerals = minerals;
 			this.components = components;
 
-			if (this.LOG.isTraceEnabled()) {
-				this.LOG.trace("Creating dashboard view with \n\tBlueprints: {}\n\tMinerals: {}\n\tComponents: {}\n\t",
+			if (this.VIEW_LOG.isTraceEnabled()) {
+				this.VIEW_LOG.trace("Creating dashboard view with \n\tBlueprints: {}\n\tMinerals: {}\n\tComponents: {}\n\t",
 				        blueprints.stream().map((blueprint) -> "Blueprint [id = " + blueprint.getId() + ",  name=" + blueprint.getName() + "]").collect(toList()),
 				        minerals, components);
 			}

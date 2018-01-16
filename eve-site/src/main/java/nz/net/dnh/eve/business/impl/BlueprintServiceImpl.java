@@ -7,20 +7,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import nz.net.dnh.eve.business.BlueprintReference;
-import nz.net.dnh.eve.business.BlueprintService;
-import nz.net.dnh.eve.business.BlueprintSummary;
-import nz.net.dnh.eve.business.CandidateBlueprint;
-import nz.net.dnh.eve.business.impl.dto.blueprint.BlueprintSummaryImpl;
-import nz.net.dnh.eve.business.impl.dto.blueprint.CandidateBlueprintImpl;
-import nz.net.dnh.eve.market.eve_central.EveCentralMarketStatRequester;
-import nz.net.dnh.eve.market.eve_central.EveCentralMarketStatResponse;
-import nz.net.dnh.eve.model.domain.Blueprint;
-import nz.net.dnh.eve.model.raw.InventoryBlueprintType;
-import nz.net.dnh.eve.model.repository.BlueprintRepository;
-import nz.net.dnh.eve.model.repository.InventoryBlueprintTypeRepository;
-import nz.net.dnh.eve.model.repository.TypeRepository;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +16,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import nz.net.dnh.eve.business.BlueprintReference;
+import nz.net.dnh.eve.business.BlueprintService;
+import nz.net.dnh.eve.business.BlueprintSummary;
+import nz.net.dnh.eve.business.CandidateBlueprint;
+import nz.net.dnh.eve.business.impl.dto.blueprint.BlueprintSummaryImpl;
+import nz.net.dnh.eve.business.impl.dto.blueprint.CandidateBlueprintImpl;
+import nz.net.dnh.eve.market.eve_central.EveCentralMarketStatResponse;
+import nz.net.dnh.eve.market.evemarketer.EveMarketerMarketRequester;
+import nz.net.dnh.eve.model.domain.Blueprint;
+import nz.net.dnh.eve.model.raw.InventoryBlueprintType;
+import nz.net.dnh.eve.model.repository.BlueprintRepository;
+import nz.net.dnh.eve.model.repository.InventoryBlueprintTypeRepository;
 
 @Service
 @Transactional
@@ -41,11 +40,9 @@ public class BlueprintServiceImpl implements BlueprintService {
 	@Autowired
 	private BlueprintRepository blueprintRepository;
 	@Autowired
-	private TypeRepository typeRepository;
-	@Autowired
 	private InventoryBlueprintTypeRepository inventoryBlueprintTypeRepository;
 	@Autowired
-	private EveCentralMarketStatRequester marketDataRepository;
+	private EveMarketerMarketRequester marketDataRepository;
 	@Autowired
 	private BlueprintResolverService blueprintResolverService;
 	@Autowired
@@ -59,15 +56,17 @@ public class BlueprintServiceImpl implements BlueprintService {
 	}
 
 	private boolean isAlreadyKnownToSystem(final BlueprintReference blueprintReference) {
-		if (blueprintReference instanceof BlueprintSummaryImpl)
+		if (blueprintReference instanceof BlueprintSummaryImpl) {
 			return true;
+		}
 
 		return this.blueprintRepository.findOne(blueprintReference.getId()) != null;
 	}
 
 	private static Pageable sanitisePageable(final Pageable page) {
-		if (page.getSort() != null)
+		if (page.getSort() != null) {
 			throw new IllegalArgumentException("The page parameter must not provide sorting information");
+		}
 		return page;
 	}
 
@@ -105,13 +104,16 @@ public class BlueprintServiceImpl implements BlueprintService {
 	public BlueprintSummary createBlueprint(final BlueprintReference blueprintReference, final BigDecimal saleValue,
 			final int numberPerRun, final int productionEfficiency, final int materialEfficiency, final Boolean automaticallyUpdateSalePrice) {
 		// Check it doesn't already exist
-		if (this.blueprintRepository.exists(blueprintReference.getId()))
+		if (this.blueprintRepository.exists(blueprintReference.getId())) {
 			throw new IllegalArgumentException("The blueprint " + blueprintReference + " already exists");
+		}
 		// Check it matches something in the EVE dump
-		if (!this.inventoryBlueprintTypeRepository.exists(blueprintReference.getId()))
+		if (!this.inventoryBlueprintTypeRepository.exists(blueprintReference.getId())) {
 			throw new IllegalArgumentException("The blueprint " + blueprintReference + " does not match any InventoryBlueprintType");
-		if (saleValue == null && automaticallyUpdateSalePrice)
+		}
+		if (saleValue == null && automaticallyUpdateSalePrice) {
 			throw new IllegalArgumentException("Sale value cannot be null if automatic updates are set to off");
+		}
 
 		// Create it
 		final Blueprint newBlueprint = new Blueprint(blueprintReference.getId(), numberPerRun, productionEfficiency,
@@ -155,12 +157,12 @@ public class BlueprintServiceImpl implements BlueprintService {
 
 	@Override
 	public BigDecimal getMarketPrice(final BlueprintReference blueprint) {
-		if (isAlreadyKnownToSystem(blueprint))
+		if (isAlreadyKnownToSystem(blueprint)) {
 			return this.blueprintResolverService.toBlueprint(blueprint).getSaleValue();
-		else {
+		} else {
 			final EveCentralMarketStatResponse marketData = this.marketDataRepository.getDataForType(
 					Arrays.asList(this.inventoryBlueprintTypeRepository.findOne(blueprint.getId()).getProductTypeID()));
-			
+
 			return marketData.getTypes().get(0).getSell().getMedian();
 		}
 	}

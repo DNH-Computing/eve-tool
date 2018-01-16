@@ -3,12 +3,6 @@ package nz.net.dnh.eve.web;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
-import nz.net.dnh.eve.business.BlueprintIdReference;
-import nz.net.dnh.eve.business.BlueprintService;
-import nz.net.dnh.eve.market.eve_central.EveCentralMarketStatRequester;
-import nz.net.dnh.eve.market.eve_central.EveCentralMarketStatResponse;
-import nz.net.dnh.eve.market.eve_central.EveCentralMarketUpdator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +12,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import nz.net.dnh.eve.business.BlueprintIdReference;
+import nz.net.dnh.eve.business.BlueprintService;
+import nz.net.dnh.eve.market.eve_central.EveCentralMarketStatResponse;
+import nz.net.dnh.eve.market.eve_central.EveCentralMarketUpdator;
+import nz.net.dnh.eve.market.evemarketer.EveMarketerMarketRequester;
+
 @Controller
 public class PriceController {
 	private static final Logger LOG = LoggerFactory.getLogger(PriceController.class);
 
-	private final EveCentralMarketStatRequester remoteMarketData;
+	private final EveMarketerMarketRequester remoteMarketData;
 	private final BlueprintService blueprintService;
 	private final EveCentralMarketUpdator marketDataUpdater;
 
 	@Autowired
-	public PriceController(final EveCentralMarketStatRequester remoteMarketData, final BlueprintService blueprintService,
+	public PriceController(final EveMarketerMarketRequester remoteMarketData, final BlueprintService blueprintService,
 			final EveCentralMarketUpdator marketDataUpdater) {
 		this.remoteMarketData = remoteMarketData;
 		this.blueprintService = blueprintService;
@@ -41,7 +41,7 @@ public class PriceController {
 		try {
 			final EveCentralMarketStatResponse response =
 					this.remoteMarketData.getDataForType(Arrays.asList(new Integer[] { typeId }));
-			
+
 			return new Response(response.getTypes().get(0).getSell().getMedian());
 		} catch (final Exception e) {
 			LOG.warn("Could not get market data for type: {}", typeId, e);
@@ -71,12 +71,15 @@ public class PriceController {
 		}
 	}
 
-	private final class Response {
-		@SuppressWarnings("unused")
-		public final BigDecimal value;
+	public final class Response {
+		private final BigDecimal value;
 
 		private Response(final BigDecimal value) {
 			this.value = value;
+		}
+
+		public BigDecimal getValue() {
+			return this.value;
 		}
 	}
 }
